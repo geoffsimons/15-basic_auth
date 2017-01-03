@@ -118,11 +118,25 @@ describe('Auth Routes', function() {
     }); // valid username and password
 
     describe('with incorrect password', () => {
-
+      it('should return a 401', done => {
+        request.get(`${url}/api/signin`)
+        .auth(exampleUser.username, 'not_the_real_password')
+        .end( (err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
     }); // incorrect password
 
     describe('unknown username', () => {
-
+      it('should return a 401', done => {
+        request.get(`${url}/api/signin`)
+        .auth('not_a_user', exampleUser.password)
+        .end( (err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
     }); //unknown username
   }); // GET /api/signin
 });

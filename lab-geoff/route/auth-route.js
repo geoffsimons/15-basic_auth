@@ -4,6 +4,7 @@ const jsonParser = require('body-parser').json();
 const debug = require('debug')('mnp:auth-route');
 const Router = require('express').Router;
 const basicAuth = require('../lib/basic-auth-middleware');
+const createError = require('http-errors');
 
 const User = require('../model/user.js');
 
@@ -30,5 +31,5 @@ router.get('/api/signin', basicAuth, function(req, res, next) {
   .then( user => user.comparePasswordHash(req.auth.password))
   .then( user => user.generateToken())
   .then( token => res.send(token))
-  .catch(next);
+  .catch( err => next(createError(401, 'authorization failed')));
 });
