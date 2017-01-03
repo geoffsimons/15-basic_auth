@@ -52,12 +52,43 @@ describe('Auth Routes', function() {
     }); // valid body
 
     describe('with a missing username', function() {
+      after( done => cleanup(done)); //Just in case?
 
+      it('should return a 400', done => {
+        request.post(`${url}/api/signup`)
+        .send({ email: exampleUser.email, password: exampleUser.password })
+        .end( (err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
     }); // missing username
 
     describe('with a missing password', function() {
+      after( done => cleanup(done)); //Just in case?
 
-    });
+      it('should return a 400', done => {
+        request.post(`${url}/api/signup`)
+        .send({ username: exampleUser.username, email: exampleUser.email })
+        .end( (err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    }); // missing password
+
+    describe('with a missing email', function() {
+      after( done => cleanup(done)); //Just in case?
+
+      it('should return a 400', done => {
+        request.post(`${url}/api/signup`)
+        .send({ username: exampleUser.username, password: exampleUser.password })
+        .end( (err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    }); // missing email
 
   }); // POST /api/signup
 
