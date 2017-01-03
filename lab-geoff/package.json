@@ -1,11 +1,11 @@
 {
-  "name": "base-server-template",
+  "name": "mnp-base-auth",
   "version": "1.0.0",
-  "description": "Base server template",
+  "description": "Basic user auth for MNP",
   "main": "index.js",
   "scripts": {
-    "test": "DEBUG='PREFIX*' mocha",
-    "start": "DEBUG='PREFIX*' node server.js"
+    "test": "DEBUG='mnp*' mocha",
+    "start": "DEBUG='mnp*' node server.js"
   },
   "keywords": [],
   "author": "",
