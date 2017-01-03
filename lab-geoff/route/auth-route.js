@@ -31,5 +31,5 @@ router.get('/api/signin', basicAuth, function(req, res, next) {
   .then( user => user.comparePasswordHash(req.auth.password))
   .then( user => user.generateToken())
   .then( token => res.send(token))
-  .catch( err => next(createError(401, 'authorization failed')));
+  .catch( err => next(createError(401, err.message)));
 });

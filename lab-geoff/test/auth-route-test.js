@@ -140,34 +140,3 @@ describe('Auth Routes', function() {
     }); //unknown username
   }); // GET /api/signin
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//

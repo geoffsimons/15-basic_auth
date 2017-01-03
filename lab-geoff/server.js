@@ -1,9 +1,10 @@
 'use strict';
 
 const express = require('express');
-const mongoose = require('mongoose');
-// const Promise = require('bluebird');
 const debug = require('debug')('mnp:server');
+const mongoose = require('mongoose');
+const Promise = require('bluebird');
+mongoose.Promise = Promise;
 
 require('dotenv').load();
 
