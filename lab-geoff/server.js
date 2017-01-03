@@ -14,9 +14,8 @@ mongoose.connect(process.env.MONGODB_URI);
 
 app.use(require('cors')());
 app.use(require('morgan')('dev'));
-
-// TODO: Add route
-// TODO: Add error
+app.use(require('./route/auth-route.js'));
+app.use(require('./lib/error-middleware.js'));
 
 app.listen(PORT, () => {
   debug('server up:', PORT);
