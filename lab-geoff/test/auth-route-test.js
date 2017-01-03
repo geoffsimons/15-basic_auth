@@ -17,7 +17,13 @@ const url = `http://localhost:${process.env.PORT}`;
 
 describe('Auth Routes', function() {
   describe('GET /some/bogus/route', function() {
-
+    it('should return a 404', done => {
+      request.get(`${url}/some/bogus/route`)
+      .end( (err, res) => {
+        expect(res.status).to.equal(404);
+        done();
+      });
+    });
   }); // Bogus Routes
 
   describe('POST /api/signup', function() {
