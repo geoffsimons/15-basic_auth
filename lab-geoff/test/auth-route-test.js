@@ -21,7 +21,7 @@ const url = `http://localhost:${process.env.PORT}`;
 function cleanup(done) {
   User.remove({})
   .then( () => done())
-  .catch( err => done(err));
+  .catch(done);
 }
 
 describe('Auth Routes', function() {
@@ -93,15 +93,35 @@ describe('Auth Routes', function() {
   }); // POST /api/signup
 
   describe('GET /api/signin', function() {
-    describe('with a valid username and password', function() {
+    before( done => {
+      let user = new User(exampleUser);
+      user.generatePasswordHash(exampleUser.password)
+      .then( user => user.save())
+      .then( user => {
+        this.tempUser = user;
+        done();
+      });
+    });
 
+    after( done => cleanup(done));
+
+    describe('with a valid username and password', () => {
+      it('should return a token', done => {
+        request.get(`${url}/api/signin`)
+        .auth(exampleUser.username, exampleUser.password)
+        .end( (err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.text).to.be.a('string');
+          done();
+        });
+      });
     }); // valid username and password
 
-    describe('with incorrect password', function() {
+    describe('with incorrect password', () => {
 
     }); // incorrect password
 
-    describe('unknown username', function() {
+    describe('unknown username', () => {
 
     }); //unknown username
   }); // GET /api/signin
