@@ -202,6 +202,17 @@ describe('Game Routes', function() {
         });
       });
     }); // valid id and token
+
+    describe('with a missing token', () => {
+      it('should return a 401', done => {
+        request.put(`${url}/api/game/${this.singlesGame._id}/join`)
+        .end( (err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    }); // missing token
+
   }); // PUT /api/game/:id/join
 });
 
