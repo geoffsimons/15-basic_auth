@@ -11,6 +11,8 @@ const Game = require('../model/game.js');
 
 const router = module.exports = new Router();
 
+//TODO: router.use(bearerAuth) ???
+
 router.post('/api/game', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST /api/game');
 
@@ -21,8 +23,7 @@ router.post('/api/game', bearerAuth, jsonParser, function(req, res, next) {
   .catch(next);
 });
 
-// PUBLIC, so no auth middleware.
-router.get('/api/game/:id', function(req, res, next) {
+router.get('/api/game/:id', bearerAuth, function(req, res, next) {
   debug('GET /api/game/:id', req.params.id); //Q: Is it bad to print id?
 
   Game.findById(req.params.id)
