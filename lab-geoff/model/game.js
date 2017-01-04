@@ -10,6 +10,7 @@ const debug = require('debug')('mnp:game');
 const gameSchema = Schema({
   // userId is who created the game.
   userId: { type: Schema.Types.ObjectId, required: true },
+  created: { type: Date, required: true, default: Date.now },
   //TODO: Q: Is it possible to specify a field that is
   //          multiple choice?
   //TODO: Maybe have type be Number, but we should have constants to
