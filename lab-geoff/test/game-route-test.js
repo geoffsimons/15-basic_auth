@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('debug')('mnp:game-route-test');
 const expect = require('chai').expect;
 const request = require('superagent');
 const mongoose = require('mongoose');
@@ -13,24 +14,44 @@ require('../server.js');
 
 const url = `http://localhost:${process.env.PORT}`;
 
+function makePlayer(data) {
+  let player = {};
+  return new User(data)
+  .generatePasswordHash(data.password)
+  .then( user => user.save())
+  .then( user => {
+    player.user = user;
+    return user.generateToken();
+  })
+  .then( token => {
+    player.token = token;
+    return player;
+  });
+}
+
 describe('Game Routes', function() {
   before( done => {
     let tasks = [];
     this.players = [];
     for(let i = 1; i < 5; i++) {
       tasks.push(
-        new User({
+        makePlayer({
           username: `user_${i}`,
-          email: `user_${i}@example.com`
+          email: `user_${i}@example.com`,
+          password: `password_${i}`
         })
-        .generatePasswordHash(`password_${i}`)
-        .then( user => user.save())
-        //TODO: create tokens for the users?
       );
     }
     Promise.all(tasks)
-    .then( () => done())
-    .catch(done);
+    .then( pArr => {
+      pArr.forEach( player => this.players.push(player));
+      debug('finished making mock players');
+      done();
+    })
+    .catch( err => {
+      console.log(err);
+      done();
+    });
   });
 
   afterEach( () => Promise.all([
@@ -40,9 +61,75 @@ describe('Game Routes', function() {
 
   describe('POST /api/game', () => {
     it('should return a game', done => {
-
+      let player = this.players[0];
+      request.post(`${url}/api/game`)
+      .send({ type: 'singles', userId: player._id })
+      .set({
+        Authorization: `Bearer ${player.token}`
+      })
+      .end( (err, res) => {
+        // console.log(res.body);
+        let date = new Date(res.body.created).toString();
+        expect(date).to.not.equal('Invalid Date');
+        expect(res.body.userId).to.equal(player.user._id.toString());
+        expect(res.body.players[0]).to.equal(player.user._id.toString());
+        done();
+      });
     });
   }); // POST /api/game
+
+  describe('GET /api/game/:id', () => {
+    before( done => {
+      new Game({
+        userId: this.players[0].user._id,
+        type: 'singles',
+        players: [ this.players[0].user._id ]
+      }).save()
+      .then( game => {
+        this.singlesGame = game;
+        done();
+      })
+      .catch(done);
+    });
+    describe('with a valid id', () => {
+      it('should return the game', done => {
+        request.get(`${url}/api/game/${this.singlesGame._id}`)
+        .set({
+          Authorization: `Bearer ${this.players[0].token}`
+        })
+        .end( (err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.type).to.equal(this.singlesGame.type);
+          expect(res.body.players).to.have.length(1);
+          done();
+        });
+      });
+    }); // valid id
+
+    describe('with no token', () => {
+      it('should return a 401', done => {
+        request.get(`${url}/api/game/${this.singlesGame._id}`)
+        .end( (err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    }); // no token
+
+    describe('with an invalid id', () => {
+      it('should return a 404', done => {
+        let player = this.players[0];
+        request.get(`${url}/api/game/abcdef`)
+        .set({
+          Authorization: `Bearer ${player.token}`
+        })
+        .end( (err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    }); // invalid id
+  }); // GET /api/game/:id
 });
 
 
