@@ -57,11 +57,6 @@ describe('Game Routes', function() {
   afterEach( () => Game.remove({}));
   after( () => User.remove({}));
 
-  // afterEach( () => Promise.all([
-  //   User.remove({}),
-  //   Game.remove({})
-  // ]));
-
   describe('POST /api/game', () => {
     describe('with a valid body and token', () => {
       it('should return a game', done => {
