@@ -174,6 +174,35 @@ describe('Game Routes', function() {
       });
     }); // invalid id
   }); // GET /api/game/:id
+
+  describe('PUT /api/game/:id/join', () => {
+    before( done => {
+      new Game({
+        userId: this.players[0].user._id,
+        type: 'singles',
+        players: [ this.players[0].user._id ]
+      }).save()
+      .then( game => {
+        this.singlesGame = game;
+        done();
+      })
+      .catch(done);
+    });
+    describe('with a valid id and token', () => {
+      it('should add the user to the game', done => {
+        request.put(`${url}/api/game/${this.singlesGame._id}/join`)
+        .set({
+          Authorization: `Bearer ${this.players[1].token}`
+        })
+        .end( (err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.players).to.have.length(2);
+          expect(res.body.players[1]).to.equal(this.players[1].user._id.toString());
+          done();
+        });
+      });
+    }); // valid id and token
+  }); // PUT /api/game/:id/join
 });
 
 
