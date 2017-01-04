@@ -54,28 +54,44 @@ describe('Game Routes', function() {
     });
   });
 
-  afterEach( () => Promise.all([
-    User.remove({}),
-    Game.remove({})
-  ]));
+  afterEach( () => Game.remove({}));
+  after( () => User.remove({}));
+
+  // afterEach( () => Promise.all([
+  //   User.remove({}),
+  //   Game.remove({})
+  // ]));
 
   describe('POST /api/game', () => {
-    it('should return a game', done => {
-      let player = this.players[0];
-      request.post(`${url}/api/game`)
-      .send({ type: 'singles', userId: player._id })
-      .set({
-        Authorization: `Bearer ${player.token}`
-      })
-      .end( (err, res) => {
-        // console.log(res.body);
-        let date = new Date(res.body.created).toString();
-        expect(date).to.not.equal('Invalid Date');
-        expect(res.body.userId).to.equal(player.user._id.toString());
-        expect(res.body.players[0]).to.equal(player.user._id.toString());
-        done();
+    describe('with a valid body and token', () => {
+      it('should return a game', done => {
+        let player = this.players[0];
+        request.post(`${url}/api/game`)
+        .send({ type: 'singles' })
+        .set({
+          Authorization: `Bearer ${player.token}`
+        })
+        .end( (err, res) => {
+          // console.log(res.body);
+          let date = new Date(res.body.created).toString();
+          expect(date).to.not.equal('Invalid Date');
+          expect(res.body.userId).to.equal(player.user._id.toString());
+          expect(res.body.players[0]).to.equal(player.user._id.toString());
+          done();
+        });
       });
-    });
+    }); // valid body and token
+
+    describe('with a missing token', () => {
+      it('should return a 401', done => {
+        request.post(`${url}/api/game`)
+        .send({ type: 'singles' })
+        .end( (err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    }); // missing token
   }); // POST /api/game
 
   describe('GET /api/game/:id', () => {
