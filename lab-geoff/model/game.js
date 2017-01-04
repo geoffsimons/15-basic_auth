@@ -36,4 +36,16 @@ gameSchema.methods.reportScores = function(scores) {
   return Promise.resolve(this);
 };
 
+gameSchema.methods.join = function(playerId) {
+  debug('join');
+
+  //TODO: Allow for 2, 3, or 4 player games.
+  if(this.players.length > 1) {
+    return Promise.reject(createError(400, 'game full'));
+  }
+
+  this.players.push(playerId);
+  return Promise.resolve(this);
+};
+
 module.exports = mongoose.model('game', gameSchema);
