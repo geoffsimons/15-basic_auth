@@ -55,7 +55,10 @@ describe('Game Routes', function() {
   });
 
   afterEach( () => Game.remove({}));
-  after( () => User.remove({}));
+  after( () => {
+    debug('cleanup users');
+    User.remove({});
+  });
 
   describe('POST /api/game', () => {
     describe('with a valid body and token', () => {
@@ -87,6 +90,36 @@ describe('Game Routes', function() {
         });
       });
     }); // missing token
+
+    describe('with a missing body', () => {
+      it('should return a 400', done => {
+        let player = this.players[0];
+        request.post(`${url}/api/game`)
+        .set({
+          Authorization: `Bearer ${player.token}`
+        })
+        .end( (err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    }); // missing body
+
+    describe('with an invalid body', () => {
+      it('should return a 400', done => {
+        let player = this.players[0];
+        request.post(`${url}/api/game`)
+        .send({ animal: 'monkey' })
+        .set({
+          Authorization: `Bearer ${player.token}`
+        })
+        .end( (err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    }); // missing body
+
   }); // POST /api/game
 
   describe('GET /api/game/:id', () => {
