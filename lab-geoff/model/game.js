@@ -28,11 +28,19 @@ gameSchema.methods.reportScores = function(playerId, scores) {
 
   if(!scores) return Promise.reject(createError(400, 'scores required'));
 
-  //TODO: Verify that there are enough players for the type.
+  if(this.type === 'singles' && this.players.length !== 2) {
+    return Promise.reject(createError(400, 'incorrect number of players before reporting'));
+  }
+
+  if(this.type === 'doubles' && this.players.length !== 4) {
+    return Promise.reject(createError(400, 'incorrect number of players before reporting'));
+  }
 
   //TODO: Verify that scores is an array of number, or let save() validate it?
 
-  //TODO: Check that scores.length matches the game type (singles vs doubles)
+  if(scores.length !== this.players.length) {
+    return Promise.reject(createError(400, 'incorrect number of scores'));
+  }
 
   //TODO: Only overwrite non-zero values from scores?
   this.scores = scores;
