@@ -212,8 +212,8 @@ describe('Game Routes', function() {
         });
       });
     }); // missing token
-
   }); // PUT /api/game/:id/join
+
 });
 
 
