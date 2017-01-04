@@ -14,8 +14,8 @@ const router = module.exports = new Router();
 router.post('/api/game', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST /api/game');
 
-  //When a game is created, it will contain one player who is the bearer.
-  req.body.players = [req.user._id];
+  req.body.userId = req.user._id;
+  req.body.players = [req.user._id]; //If you create a game, you are in it...for now.
   new Game(req.body).save()
   .then( game => res.json(game))
   .catch(next);
@@ -42,6 +42,7 @@ router.put('/api/game/:id/join', bearerAuth, jsonParser, function(req, res, next
   .catch(next); //TODO: createError?
 });
 
+// Report scores for a game
 router.put('/api/game/:id/scores', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT /api/game/:id/scores');
 

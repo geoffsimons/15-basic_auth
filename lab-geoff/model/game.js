@@ -8,6 +8,8 @@ const Schema = mongoose.Schema;
 const debug = require('debug')('mnp:game');
 
 const gameSchema = Schema({
+  // userId is who created the game.
+  userId: { type: Schema.Types.ObjectId, required: true },
   //TODO: Q: Is it possible to specify a field that is
   //          multiple choice?
   //TODO: Maybe have type be Number, but we should have constants to
@@ -16,15 +18,17 @@ const gameSchema = Schema({
   // machine: { type: Schema.Types.ObjectId, ref: 'machine', required: true },
   // venue: { type: Schema.Types.ObjectId, ref: 'venue', required: true },
   players: [{ type: Schema.Types.ObjectId }], // Size based on type
-  //TODO: scores should be an object { 1: Number, 2: Number, 3: Number, 4: Number }
+  //TODO:should scores be an object { 1: Number, 2: Number, 3: Number, 4: Number }
   scores: [{ type: Number }]
 });
 
 //TODO: Who is allowed to call this? Add a reportedBy param?
-gameSchema.methods.reportScores = function(scores) {
+gameSchema.methods.reportScores = function(playerId, scores) {
   debug('reportScores');
 
   if(!scores) return Promise.reject(createError(400, 'scores required'));
+
+  //TODO: Verify that there are enough players for the type.
 
   //TODO: Verify that scores is an array of number, or let save() validate it?
 
