@@ -16,6 +16,7 @@ mongoose.connect(process.env.MONGODB_URI);
 app.use(require('cors')());
 app.use(require('morgan')('dev'));
 app.use(require('./route/auth-route.js'));
+app.use(require('./route/game-route.js'));
 app.use(require('./lib/error-middleware.js'));
 
 app.listen(PORT, () => {
