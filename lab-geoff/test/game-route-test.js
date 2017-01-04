@@ -212,6 +212,92 @@ describe('Game Routes', function() {
         });
       });
     }); // missing token
+
+    describe('with an invalid game id', () => {
+      it('should return a 404', done => {
+        request.put(`${url}/api/game/abcdef/join`)
+        .set({
+          Authorization: `Bearer ${this.players[1].token}`
+        })
+        .end( (err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    }); // invalid game id
+  }); // PUT /api/game/:id/join
+
+  describe('PUT /api/game/:id/report-scores', () => {
+    before( done => {
+      new Game({
+        userId: this.players[0].user._id,
+        type: 'singles',
+        players: [ this.players[0].user._id, this.players[1].user._id ]
+      }).save()
+      .then( game => {
+        this.singlesGame = game;
+        done();
+      })
+      .catch(done);
+    });
+    describe('with a valid id, token, and body', () => {
+      it('should update the scores of the game', done => {
+        let scores = [ 50000, 75000 ];
+        request.put(`${url}/api/game/${this.singlesGame._id}/report-scores`)
+        .set({
+          Authorization: `Bearer ${this.players[1].token}`
+        })
+        .send(scores)
+        .end( (err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.scores).to.have.length(2);
+          expect(res.body.scores).to.deep.equal(scores);
+          done();
+        });
+      });
+    }); // valid id and token
+
+    describe('with invalid body', () => {
+      it('should return 400', done => {
+        let scores = { hello: 'This is not even an array' };
+        request.put(`${url}/api/game/${this.singlesGame._id}/report-scores`)
+        .set({
+          Authorization: `Bearer ${this.players[1].token}`
+        })
+        .send(scores)
+        .end( (err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    }); // invalid body
+
+    describe('with a missing token', () => {
+      it('should return a 401', done => {
+        let scores = [ 50000, 75000 ];
+        request.put(`${url}/api/game/${this.singlesGame._id}/report-scores`)
+        .send(scores)
+        .end( (err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    }); // missing token
+
+    describe('with an invalid game id', () => {
+      it('should return a 404', done => {
+        let scores = [ 50000, 75000 ];
+        request.put(`${url}/api/game/abcdef/report-scores`)
+        .set({
+          Authorization: `Bearer ${this.players[1].token}`
+        })
+        .send(scores)
+        .end( (err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    }); // invalid game id
   }); // PUT /api/game/:id/join
 
 });

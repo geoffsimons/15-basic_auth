@@ -44,13 +44,13 @@ router.put('/api/game/:id/join', bearerAuth, jsonParser, function(req, res, next
 });
 
 // Report scores for a game
-router.put('/api/game/:id/scores', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT /api/game/:id/scores');
+router.put('/api/game/:id/report-scores', bearerAuth, jsonParser, function(req, res, next) {
+  debug('PUT /api/game/:id/report-scores');
 
   Game.findById(req.params.id)
   .catch( () => next(createError(404, 'not found')))
   .then( game => game.reportScores(req.user._id, req.body))
   .then( game => game.save())
   .then( game => res.json(game))
-  .catch(next);
+  .catch( err => next(createError(400, err.message)));
 });

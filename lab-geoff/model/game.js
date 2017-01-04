@@ -37,6 +37,10 @@ gameSchema.methods.reportScores = function(playerId, scores) {
     return Promise.reject(createError(400, 'incorrect number of players before reporting'));
   }
 
+  if(!Array.isArray(scores)) {
+    return Promise.reject(createError(400, 'scores should be an array'));
+  }
+
   //TODO: Verify that scores is an array of number, or let save() validate it?
 
   if(scores.length !== this.players.length) {
