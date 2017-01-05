@@ -90,7 +90,7 @@ router.delete('/api/game/:gameId/pic/:picId', bearerAuth, function(req, res, nex
   Pic.findById(req.params.picId)
   // .catch( err => next(createError(404, err.message)))
   .then( pic => {
-    debug('found pic', pic);
+    debug('found pic', pic); //TODO: pic has been null here!?!
     debug('pic.userId:',pic.userId);
     debug('req.user._id:',req.user._id);
     if(pic.userId !== req.user._id) {
@@ -106,31 +106,3 @@ router.delete('/api/game/:gameId/pic/:picId', bearerAuth, function(req, res, nex
   .then( () => res.status(204).send())
   .catch(next);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
