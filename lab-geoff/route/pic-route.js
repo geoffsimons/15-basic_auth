@@ -90,10 +90,11 @@ router.delete('/api/game/:gameId/pic/:picId', bearerAuth, function(req, res, nex
   Pic.findById(req.params.picId)
   // .catch( err => next(createError(404, err.message)))
   .then( pic => {
-    debug('found pic', pic); //TODO: pic has been null here!?!
-    debug('pic.userId:',pic.userId);
-    debug('req.user._id:',req.user._id);
-    if(pic.userId !== req.user._id) {
+    // debug('found pic', pic); //TODO: pic has been null here!?!
+    // debug('pic.userId:',pic.userId);
+    // debug('req.user._id:',req.user._id);
+    if(pic.userId.toString() !== req.user._id.toString()) {
+      debug('not the owner of the pic');
       return next(createError(401, 'not the owner of the pic'));
     }
 
@@ -103,6 +104,9 @@ router.delete('/api/game/:gameId/pic/:picId', bearerAuth, function(req, res, nex
     });
   })
   .then( () => Pic.findByIdAndRemove(req.params.picId))
-  .then( () => res.status(204).send())
-  .catch(next);
+  .then( () => res.status(204).send('OK'))
+  .catch( err => {
+    console.error(err);
+    next(err);
+  });
 });
