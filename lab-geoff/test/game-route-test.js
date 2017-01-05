@@ -28,6 +28,8 @@ describe('Game Routes', function() {
     .then( pArr => {
       pArr.forEach( player => this.players.push(player));
       debug('finished making mock players');
+      debug(this.players[0]._id);
+      debug(this.players[0].token);
       done();
     })
     .catch( err => {
@@ -56,8 +58,8 @@ describe('Game Routes', function() {
           // console.log(res.body);
           let date = new Date(res.body.created).toString();
           expect(date).to.not.equal('Invalid Date');
-          expect(res.body.userId).to.equal(player.user._id.toString());
-          expect(res.body.players[0]).to.equal(player.user._id.toString());
+          expect(res.body.userId).to.equal(player._id.toString());
+          expect(res.body.players[0]).to.equal(player._id.toString());
           done();
         });
       });
@@ -108,9 +110,9 @@ describe('Game Routes', function() {
   describe('GET /api/game/:id', () => {
     before( done => {
       new Game({
-        userId: this.players[0].user._id,
+        userId: this.players[0]._id,
         type: 'singles',
-        players: [ this.players[0].user._id ]
+        players: [ this.players[0]._id ]
       }).save()
       .then( game => {
         this.singlesGame = game;
@@ -161,9 +163,9 @@ describe('Game Routes', function() {
   describe('PUT /api/game/:id/join', () => {
     before( done => {
       new Game({
-        userId: this.players[0].user._id,
+        userId: this.players[0]._id,
         type: 'singles',
-        players: [ this.players[0].user._id ]
+        players: [ this.players[0]._id ]
       }).save()
       .then( game => {
         this.singlesGame = game;
@@ -180,7 +182,7 @@ describe('Game Routes', function() {
         .end( (err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body.players).to.have.length(2);
-          expect(res.body.players[1]).to.equal(this.players[1].user._id.toString());
+          expect(res.body.players[1]).to.equal(this.players[1]._id.toString());
           done();
         });
       });
@@ -213,9 +215,9 @@ describe('Game Routes', function() {
   describe('PUT /api/game/:id/report-scores', () => {
     before( done => {
       new Game({
-        userId: this.players[0].user._id,
+        userId: this.players[0]._id,
         type: 'singles',
-        players: [ this.players[0].user._id, this.players[1].user._id ]
+        players: [ this.players[0]._id, this.players[1]._id ]
       }).save()
       .then( game => {
         this.singlesGame = game;

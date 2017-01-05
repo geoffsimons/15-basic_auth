@@ -6,7 +6,7 @@ var num = 0;
 
 module.exports = function() {
   num++;
-  let player = {};
+  let _user = {};
   let rando = Math.floor(Math.random() * 10000);
   return new User({
     username: `user_${rando}${num}`,
@@ -15,12 +15,11 @@ module.exports = function() {
   .generatePasswordHash(`pass_${rando}`)
   .then( user => user.save())
   .then( user => {
-    //TODO: refactor to: player = user;
-    player.user = user;
+    _user = user;
     return user.generateToken();
   })
   .then( token => {
-    player.token = token;
-    return player;
+    _user.token = token;
+    return _user;
   });
 };
