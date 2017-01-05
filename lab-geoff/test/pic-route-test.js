@@ -61,6 +61,15 @@ describe('Pic Routes', function() {
     }); // valid token and data
   }); // POST /api/game/:gameId/pic
 
+  describe('GET /api/game/:gameId/pic', () => {
+    describe('with a valid gameId', () => {
+      //TODO: list of pics, or most recent?
+      it('should return a list of pics', done => {
+        done(); //TODO: FALSE POSITIVE
+      });
+    }); // valid id
+  }); // GET /api/game/:gameId/pic
+
   describe('DELETE /api/game/:gameId/pic/:picId', () => {
     describe('with valid ids', () => {
       it('should return a 204', done => {
