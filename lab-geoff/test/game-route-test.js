@@ -286,33 +286,3 @@ describe('Game Routes', function() {
   }); // PUT /api/game/:id/join
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
