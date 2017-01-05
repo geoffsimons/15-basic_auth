@@ -20,6 +20,8 @@ app.use(require('./route/pic-route.js'));
 app.use(require('./route/game-route.js'));
 app.use(require('./lib/error-middleware.js'));
 
-app.listen(PORT, () => {
+const server = module.exports = app.listen(PORT, () => {
   debug('server up:', PORT);
 });
+
+server.running = true;
