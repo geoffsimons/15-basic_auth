@@ -31,8 +31,19 @@ function s3uploadProm(params) {
   });
 }
 
-router.post('/api/gallery/:gameId/pic', bearerAuth, upload.single('image'), function(req, res, next) {
-  debug('POST /api/gallery/:gameId/pic');
+function s3deleteProm(params) {
+  return new Promise( (resolve, reject) => {
+    s3.deleteObject(params, (err, s3data) => {
+      if(err) return reject(err);
+      // TODO: check s3data for success.
+      debug('deleteObject s3data', s3data);
+      resolve(s3data);
+    });
+  });
+}
+
+router.post('/api/game/:gameId/pic', bearerAuth, upload.single('image'), function(req, res, next) {
+  debug('POST /api/game/:gameId/pic');
 
   if(!req.file) return next(createError(400, 'file not found'));
   if(!req.file.path) return next(createError(500, 'file not saved'));
@@ -63,7 +74,25 @@ router.post('/api/gallery/:gameId/pic', bearerAuth, upload.single('image'), func
   .catch(next);
 });
 
+//Q: Why not just /api/pic/:id ?
+router.delete('/api/game/:gameId/pic/:picId', function(req, res, next) {
+  debug('DELETE /api/game/:gameId/pic/:picId');
 
+  Pic.findOne(req.params.picId)
+  .catch( err => next(createError(404, err.message)))
+  .then( pic => {
+    if(pic.userId !== req.user._id) {
+      return next(createError(401, 'not the owner of the pic'));
+    }
+
+    return s3deleteProm({
+      Bucket: process.env.AWS_BUCKET,
+      Key: pic.objectKey
+    });
+  })
+  .then( () => Pic.remove(req.params.picId))
+  .catch(next);
+});
 
 
 
