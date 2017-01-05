@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "DEBUG='mnp*' mocha",
+    "testgame": "DEBUG='mnp*' mocha test/game-route-test.js",
     "start": "DEBUG='mnp*' node server.js"
   },
   "keywords": [],
