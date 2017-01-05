@@ -75,14 +75,24 @@ router.post('/api/game/:gameId/pic', bearerAuth, upload.single('image'), functio
   .catch(next);
 });
 
+router.get('/api/game/:gameId/pic', bearerAuth, function(req, res, next) {
+  debug('GET /api/game/:gameId/pic');
+
+  Pic.findById(req.params.picId)
+  .then( pic => res.json(pic))
+  .catch( err => next(createError(404, err.message)));
+});
+
 //Q: Why not just /api/pic/:id ?
 router.delete('/api/game/:gameId/pic/:picId', bearerAuth, function(req, res, next) {
   debug('DELETE /api/game/:gameId/pic/:picId');
 
-  Pic.findOne(req.params.picId)
-  .catch( err => next(createError(404, err.message)))
+  Pic.findById(req.params.picId)
+  // .catch( err => next(createError(404, err.message)))
   .then( pic => {
-    debug('found pic');
+    debug('found pic', pic);
+    debug('pic.userId:',pic.userId);
+    debug('req.user._id:',req.user._id);
     if(pic.userId !== req.user._id) {
       return next(createError(401, 'not the owner of the pic'));
     }
@@ -92,7 +102,7 @@ router.delete('/api/game/:gameId/pic/:picId', bearerAuth, function(req, res, nex
       Key: pic.objectKey
     });
   })
-  .then( () => Pic.remove(req.params.picId))
+  .then( () => Pic.findByIdAndRemove(req.params.picId))
   .then( () => res.status(204).send())
   .catch(next);
 });
