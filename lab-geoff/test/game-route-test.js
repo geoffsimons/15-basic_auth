@@ -10,39 +10,21 @@ mongoose.Promise = Promise;
 const User = require('../model/user.js');
 const Game = require('../model/game.js');
 
-require('../server.js');
+const server = require('../server.js');
+const serverToggle = require('./lib/server-toggle.js');
 
 const url = `http://localhost:${process.env.PORT}`;
 
-function makePlayer(data) {
-  let player = {};
-  return new User(data)
-  .generatePasswordHash(data.password)
-  .then( user => user.save())
-  .then( user => {
-    player.user = user;
-    return user.generateToken();
-  })
-  .then( token => {
-    player.token = token;
-    return player;
-  });
-}
+const mockPlayer = require('./lib/mock-user.js');
 
 describe('Game Routes', function() {
+  before( done => serverToggle.start(server, done));
   before( done => {
-    let tasks = [];
     this.players = [];
-    for(let i = 1; i < 5; i++) {
-      tasks.push(
-        makePlayer({
-          username: `user_${i}`,
-          email: `user_${i}@example.com`,
-          password: `password_${i}`
-        })
-      );
-    }
-    Promise.all(tasks)
+    Promise.all([
+      mockPlayer(),
+      mockPlayer()
+    ])
     .then( pArr => {
       pArr.forEach( player => this.players.push(player));
       debug('finished making mock players');
@@ -59,6 +41,7 @@ describe('Game Routes', function() {
     debug('cleanup users');
     User.remove({});
   });
+  after( done => serverToggle.stop(server, done));
 
   describe('POST /api/game', () => {
     describe('with a valid body and token', () => {
