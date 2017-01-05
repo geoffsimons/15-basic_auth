@@ -8,6 +8,7 @@ mongoose.Promise = Promise;
 
 const User = require('../model/user.js');
 
+//TODO: Refactor to use our /lib helpers
 require('../server.js');
 
 const exampleUser = {
