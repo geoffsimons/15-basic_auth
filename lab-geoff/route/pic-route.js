@@ -75,7 +75,7 @@ router.post('/api/game/:gameId/pic', bearerAuth, upload.single('image'), functio
 });
 
 //Q: Why not just /api/pic/:id ?
-router.delete('/api/game/:gameId/pic/:picId', function(req, res, next) {
+router.delete('/api/game/:gameId/pic/:picId', bearerAuth, function(req, res, next) {
   debug('DELETE /api/game/:gameId/pic/:picId');
 
   Pic.findOne(req.params.picId)
@@ -91,6 +91,7 @@ router.delete('/api/game/:gameId/pic/:picId', function(req, res, next) {
     });
   })
   .then( () => Pic.remove(req.params.picId))
+  .then( () => res.status(204).send())
   .catch(next);
 });
 
