@@ -32,6 +32,7 @@ function s3uploadProm(params) {
 }
 
 function s3deleteProm(params) {
+  debug('s3deleteProm', params);
   return new Promise( (resolve, reject) => {
     s3.deleteObject(params, (err, s3data) => {
       if(err) return reject(err);
@@ -81,6 +82,7 @@ router.delete('/api/game/:gameId/pic/:picId', bearerAuth, function(req, res, nex
   Pic.findOne(req.params.picId)
   .catch( err => next(createError(404, err.message)))
   .then( pic => {
+    debug('found pic');
     if(pic.userId !== req.user._id) {
       return next(createError(401, 'not the owner of the pic'));
     }
