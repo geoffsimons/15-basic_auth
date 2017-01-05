@@ -83,7 +83,7 @@ describe('Pic Routes', function() {
   describe('DELETE /api/game/:gameId/pic/:picId', () => {
     describe('with valid ids', () => {
       it('should return a 204', done => {
-        debug('trying to delete',this.tempPic._id);
+        // debug('trying to delete',this.tempPic._id);
         request.delete(`${url}/api/game/${this.tempGame._id}/pic/${this.tempPic._id}`)
         .set({
           Authorization: `Bearer ${this.tempUser.token}`
