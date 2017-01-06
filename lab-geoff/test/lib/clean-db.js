@@ -1,7 +1,6 @@
 'use strict';
 
 const debug = require('debug')('mnp:clean-db');
-// const debug = function(msg) { console.log(msg); };
 const User = require('../../model/user.js');
 const Game = require('../../model/game.js');
 const Pic = require('../../model/pic.js');
