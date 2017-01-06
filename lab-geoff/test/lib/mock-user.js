@@ -1,10 +1,12 @@
 'use strict';
 
 const User = require('../../model/user.js');
+const debug = require('debug')('mnp:mock-user');
 
 var num = 0;
 
 module.exports = function() {
+  debug('working...', Date.now());
   num++;
   let _user = {};
   let rando = Math.floor(Math.random() * 10000);

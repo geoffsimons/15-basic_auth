@@ -33,6 +33,7 @@ describe('Game Routes', function() {
       done();
     })
     .catch( err => {
+      debug('mock player setup FAILED!');
       console.log(err);
       done();
     });
