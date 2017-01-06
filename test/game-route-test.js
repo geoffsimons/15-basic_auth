@@ -44,6 +44,7 @@ describe('Game Routes', function() {
     debug('cleanup users');
     User.remove({});
   });
+  after(require('./lib/clean-db.js'));
   after( done => serverToggle.stop(server, done));
 
   describe('POST /api/game', () => {
