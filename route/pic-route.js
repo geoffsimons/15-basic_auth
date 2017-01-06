@@ -75,13 +75,13 @@ router.post('/api/game/:gameId/pic', bearerAuth, upload.single('image'), functio
   .catch(next);
 });
 
-router.get('/api/game/:gameId/pic', bearerAuth, function(req, res, next) {
-  debug('GET /api/game/:gameId/pic');
-
-  Pic.findById(req.params.picId)
-  .then( pic => res.json(pic))
-  .catch( err => next(createError(404, err.message)));
-});
+// router.get('/api/game/:gameId/pic', bearerAuth, function(req, res, next) {
+//   debug('GET /api/game/:gameId/pic');
+//
+//   Pic.findById(req.params.picId)
+//   .then( pic => res.json(pic))
+//   .catch( err => next(createError(404, err.message)));
+// });
 
 //Q: Why not just /api/pic/:id ?
 router.delete('/api/game/:gameId/pic/:picId', bearerAuth, function(req, res, next) {
