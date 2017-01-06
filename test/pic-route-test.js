@@ -61,24 +61,24 @@ describe('Pic Routes', function() {
     }); // valid token and data
   }); // POST /api/game/:gameId/pic
 
-  describe('GET /api/game/:gameId/pic/:picId', () => {
-    describe('with valid ids', () => {
-      it('should return a pic', done => {
-        expect(true).to.equal(false);
-        done();
-      });
-    });
-  }); // GET /api/game/:gameId/pic/:picId
-
-  describe('GET /api/game/:gameId/pic', () => {
-    describe('with a valid gameId', () => {
-      //TODO: list of pics, or most recent?
-      it('should return a list of pics', done => {
-        expect(true).to.equal(false);
-        done();
-      });
-    }); // valid id
-  }); // GET /api/game/:gameId/pic
+  // describe('GET /api/game/:gameId/pic/:picId', () => {
+  //   describe('with valid ids', () => {
+  //     it('should return a pic', done => {
+  //       expect(true).to.equal(false);
+  //       done();
+  //     });
+  //   });
+  // }); // GET /api/game/:gameId/pic/:picId
+  //
+  // describe('GET /api/game/:gameId/pic', () => {
+  //   describe('with a valid gameId', () => {
+  //     //TODO: list of pics, or most recent?
+  //     it('should return a list of pics', done => {
+  //       expect(true).to.equal(false);
+  //       done();
+  //     });
+  //   }); // valid id
+  // }); // GET /api/game/:gameId/pic
 
   describe('DELETE /api/game/:gameId/pic/:picId', () => {
     describe('with valid ids', () => {
