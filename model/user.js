@@ -51,14 +51,20 @@ userSchema.methods.generateFindHash = function() {
 
     function _generateFindHash() {
       this.findHash = crypto.randomBytes(32).toString('hex');
-      debug('trying ', this.findHash);
+      debug('trying', this.findHash);
       this.save()
-      .then( () => resolve(this.findHash))
+      .then( user => {
+        debug('...success',user.findHash);
+        resolve(this.findHash);
+      })
       .catch( err => {
         debug('failed try',tries);
         if(tries > 3) return reject(err);
         tries++;
         _generateFindHash.call(this);
+      })
+      .finally( () => {
+        debug('...finally done');
       });
     }
   });

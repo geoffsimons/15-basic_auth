@@ -17,10 +17,13 @@ module.exports = function() {
   .generatePasswordHash(`pass_${rando}`)
   .then( user => user.save())
   .then( user => {
+    debug('saved user',user.username);
+    debug('     email',user.email);
     _user = user;
     return user.generateToken();
   })
   .then( token => {
+    debug('token:',token);
     _user.token = token;
     return _user;
   });
