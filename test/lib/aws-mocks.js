@@ -18,9 +18,6 @@ exports.uploadMock = {
 AWS.mock('S3', 'upload', function(params, callback) {
   debug('upload()');
 
-  var aws = require('aws-sdk');
-  new aws.S3();
-
   if(params.ACL !== 'public-read') {
     return callback(new Error('ACL must be public-read'));
   }
@@ -36,3 +33,23 @@ AWS.mock('S3', 'upload', function(params, callback) {
 
   return callback(null, exports.uploadMock);
 });
+
+AWS.mock('S3', 'deleteObject', function(params, callback) {
+  debug('deleteObject()');
+
+  if(params.Bucket !== bucket) {
+    return callback(new Error(`Bucket must be ${bucket}`));
+  }
+  if(!params.Key) {
+    return callback(new Error('Key required'));
+  }
+
+  return callback(null, {});
+});
+
+
+
+
+
+
+//
