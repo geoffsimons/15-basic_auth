@@ -1,6 +1,9 @@
 
 # Created by https://www.gitignore.io/api/node,macos,vim,windows,linux
 .env
+# The data dir is intended only for temporary image files
+# before we push them to S3
+data
 
 ### Node ###
 node_modules

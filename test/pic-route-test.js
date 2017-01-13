@@ -1,5 +1,8 @@
 'use strict';
 
+require('./lib/test-env.js');
+
+const awsMocks = require('./lib/aws-mocks.js');
 const expect = require('chai').expect;
 const request = require('superagent');
 const debug = require('debug')('mnp:pic-route-test');
@@ -51,8 +54,8 @@ describe('Pic Routes', function() {
           expect(res.status).to.equal(200);
           expect(res.body.userId).to.equal(this.tempUser._id.toString());
           expect(res.body.gameId).to.equal(this.tempGame._id.toString());
-          expect(res.body.imageURI).to.be.a('string'); //to be a 'url' ??
-          expect(res.body.objectKey).to.be.a('string');
+          expect(res.body.imageURI).to.equal(awsMocks.uploadMock.Location);
+          expect(res.body.objectKey).to.equal(awsMocks.uploadMock.Key);
           this.tempPic = res.body;
           debug('created ', this.tempPic._id);
           done();
