@@ -16,22 +16,26 @@ const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 AWS.config.setPromisesDependency(Promise);
 
-const s3 = new AWS.S3();
+//NOTE: Loading s3 here did not allow for the mocks to work.
+// const s3 = new AWS.S3();
 const dataDir = `${__dirname}/../data`;
 const upload = multer({ dest: dataDir });
 
 const router = module.exports = new Router();
 
 function s3uploadProm(params) {
+  let s3 = new AWS.S3(); //Moving s3 here allows the mocks to work.
+  debug('s3uploadProm', params.Key);
   return new Promise( (resolve, reject) => {
-    s3.upload(params, err => {
+    s3.upload(params, (err, s3data) => {
       if(err) return reject(err);
-      resolve();
+      resolve(s3data);
     });
   });
 }
 
 function s3deleteProm(params) {
+  let s3 = new AWS.S3();
   debug('s3deleteProm', params);
   return new Promise( (resolve, reject) => {
     s3.deleteObject(params, (err, s3data) => {
@@ -61,6 +65,7 @@ router.post('/api/game/:gameId/pic', bearerAuth, upload.single('image'), functio
   .catch( err => next(createError(404, err.message)))
   .then( () => s3uploadProm(params))
   .then( s3data => {
+    debug('s3data', s3data);
     // Lecture was deleting everything, but that could
     // cause problems with multiple users.
     del(req.file.path);

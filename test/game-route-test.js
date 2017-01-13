@@ -21,20 +21,18 @@ describe('Game Routes', function() {
   before( done => serverToggle.start(server, done));
   before( done => {
     this.players = [];
-    Promise.all([
-      mockPlayer(),
-      mockPlayer()
-    ])
-    .then( pArr => {
-      pArr.forEach( player => this.players.push(player));
-      debug('finished making mock players');
-      debug(this.players[0]._id);
-      debug(this.players[0].token);
+
+    mockPlayer().then( player => {
+      this.players.push(player);
+    })
+    .then( () => mockPlayer())
+    .then( player => {
+      this.players.push(player);
       done();
     })
     .catch( err => {
       debug('mock player setup FAILED!');
-      console.log(err);
+      debug(err.message);
       done();
     });
   });
