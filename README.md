@@ -1,4 +1,5 @@
 # Basic Authentication API
+[![Coverage Status](https://coveralls.io/repos/github/geoffsimons/15-basic_auth/badge.svg)](https://coveralls.io/github/geoffsimons/15-basic_auth)
 
 Example of using basic http authentication to sign users in.
 
